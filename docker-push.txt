@@ -1,0 +1,20 @@
+on: push
+name: deploy
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # actions/checkout@master
+      - name: build and push to docker
+        uses: docker/build-push-action@v1
+        with:
+          context: ./gestion_viajes
+          dockerfile: ./gestion_viajes/Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ github.repository }}
+          tags: ${{ github.repository }}:${{ github.sha }}
+          #tags: ${{ github.sha }}
+          #tag_with_ref: true
+          #tag_with_sha: true

@@ -1,0 +1,54 @@
+version: '3.1'
+services:
+  viajes-db:
+    container_name: viajes-db
+    image: maynerac/mysql-viajes-u1:2.0 #mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: upt.2023
+      MYSQL_DATABASE: gestion_viajes
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: upt.2023
+    ports:
+      - 3306:3306
+  viajes-adminer:
+    container_name: viajes-adminer
+    image: maynerac/adminer-viajes-u1:2.0 #adminer
+    restart: always
+    ports:
+      - 8484:8080
+    depends_on:
+      - viajes-db
+  viajes-api:
+    container_name: viajes-api
+    build: . #maynerac/api-viajes-u1:2.0
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=viajes-db
+    depends_on:
+      - viajes-db
+    restart: on-failure
+  prometheus-metricas:
+    container_name: prometheus-metricas
+    image: maynerac/prometheus-metricas-u2:2.0 #prom/prometheus:v2.48.0
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+  redis-metricas:
+    container_name: redis-metricas
+    image: maynerac/redis-metricas-u2:2.0 #redis:latest
+    ports:
+      - "6379:6379"
+    restart: always
+  grafana-metricas:
+    container_name: grafana-metricas
+    image: maynerac/grafana-metricas-u2:2.0 #grafana/grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped

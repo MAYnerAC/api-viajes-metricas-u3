@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "prometheus-metricas"
+    static_configs:
+      - targets: ["prometheus-metricas:9090"]
+
+  - job_name: "viajes-api"
+    static_configs:
+      - targets: ["viajes-api:8000"]
