@@ -9,3 +9,29 @@ scrape_configs:
   - job_name: "viajes-api"
     static_configs:
       - targets: ["viajes-api:8000"]
+
+  - job_name: "clientes-api-internal"
+    static_configs:
+      - targets: ["host.docker.internal:5000"]
+
+  - job_name: "pasajes-api-internal"
+    static_configs:
+      - targets: ["host.docker.internal:8001"]
+
+  - job_name: "usuarios-api-internal"
+    static_configs:
+      - targets: ["host.docker.internal:5001"]
+
+  #Targets en la nube:
+
+  - job_name: "clientes-api"
+    static_configs:
+      - targets: ["161.132.37.246:5000"]
+
+  - job_name: "pasajes-api"
+    static_configs:
+      - targets: ["172.233.215.194:8004"]
+
+  - job_name: "usuarios-api"
+    static_configs:
+      - targets: ["161.132.47.44:5000"]
